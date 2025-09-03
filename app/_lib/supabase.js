@@ -4,8 +4,3 @@ export const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY
 );
-
-// const supabaseUrl = "https://qlhfjuapotidufxywbyk.supabase.co";
-// const supabaseKey = process.env.SUPABASE_KEY;
-
-// export const supabase = createClient(supabaseUrl, supabaseKey);
