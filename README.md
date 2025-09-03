@@ -3,6 +3,15 @@
 A modern full-stack web application built with **Next.js (App Router)**, **React**, and **Supabase** as the backend.  
 This project is part of my learning journey with Next.js and demonstrates concepts like server components, client components, API routes, authentication, and database integration.
 
+---
+
+## Live Demo
+
+Check out the deployed version live at:  
+👉 [the-wild-oasis-website-vitalii-uap.vercel.app](https://the-wild-oasis-website-vitalii-uap.vercel.app/)
+
+---
+
 ## ✨ Features
 
 - 🏕️ Browse a list of luxury cabins
