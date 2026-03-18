@@ -3,11 +3,17 @@ import CabinCard from "./CabinCard";
 import { getCabins } from "../_lib/data-service";
 
 async function CabinList({ filter }) {
-  // noStore();
+  noStore();
 
   const cabins = await getCabins();
 
-  if (!cabins.length) return null;
+  if (!cabins?.length)
+    return (
+      <p className="text-primary-200">
+        No cabins found. If this is unexpected, check your Supabase table data
+        and Row Level Security policies.
+      </p>
+    );
 
   let displayedCabins;
   if (filter === "all") displayedCabins = cabins;

@@ -1,5 +1,6 @@
 "use client";
 
+import { startTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 function Filter() {
@@ -12,7 +13,10 @@ function Filter() {
   function handleFilter(filter) {
     const params = new URLSearchParams(searchParams);
     params.set("capacity", filter);
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      router.refresh();
+    });
   }
 
   return (

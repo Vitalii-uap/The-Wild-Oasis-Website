@@ -1,5 +1,6 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
 import { notFound } from "next/navigation";
 
 export async function getCabin(id) {
@@ -47,13 +48,15 @@ export const getCabins = async function () {
 
 // Guests are uniquely identified by their email address
 export async function getGuest(email) {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("guests")
     .select("*")
     .eq("email", email)
-    .single();
+    .order("id", { ascending: false })
+    .limit(1);
 
-  return data;
+  if (error) console.error(error);
+  return data?.[0] ?? null;
 }
 
 export async function getBooking(id) {
@@ -72,7 +75,8 @@ export async function getBooking(id) {
 }
 
 export async function getBookings(guestId) {
-  const { data, error, count } = await supabase
+  if (!guestId) throw new Error("Missing guestId");
+  const { data, error, count } = await supabaseAdmin
     .from("bookings")
     .select(
       "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestID, cabinID, cabins(name, image)"
@@ -142,7 +146,13 @@ export async function getCountries() {
 }
 
 export async function createGuest(newGuest) {
-  const { data, error } = await supabase.from("guests").insert([newGuest]);
+  if (!newGuest?.email) throw new Error("Missing guest email");
+
+  // Avoid creating duplicates even if DB lacks a unique constraint
+  const existing = await getGuest(newGuest.email);
+  if (existing) return [existing];
+
+  const { data, error } = await supabaseAdmin.from("guests").insert([newGuest]);
 
   if (error) {
     console.error(error);

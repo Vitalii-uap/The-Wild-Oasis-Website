@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
-import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
 import { getBookings } from "./data-service";
 import { redirect } from "next/navigation";
 
@@ -19,7 +19,7 @@ export async function updateGuest(formData) {
 
   const updateData = { nationality, countryFlag, nationalID };
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from("guests")
     .update(updateData)
     .eq("id", session.user.guestId);
@@ -46,7 +46,7 @@ export async function createBooking(bookingData, formData) {
     status: "unconfirmed",
   };
 
-  const { error } = await supabase.from("bookings").insert([newBooking]);
+  const { error } = await supabaseAdmin.from("bookings").insert([newBooking]);
 
   if (error) throw new Error("Reservation could not be created");
 
@@ -66,7 +66,7 @@ export async function deleteBooking(bookingId) {
   if (!guestBookingIds.includes(bookingId))
     throw new Error("You are not allowed to delete this reservation");
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from("bookings")
     .delete()
     .eq("id", bookingId);
@@ -94,7 +94,7 @@ export async function updateBooking(formData) {
     observations: formData.get("observations").slice(0, 1000),
   };
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from("bookings")
     .update(updateData)
     .eq("id", bookingId)
